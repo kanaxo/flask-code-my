@@ -4,10 +4,11 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello():
-    return "Hello world"
+    # return "Hello world"
+    return render_template("index.html")
 
 @app.route('/name/<name>')
-def hello_name(name):
+def user(name):
     return render_template("name.html", user_name=name)
 
 @app.errorhandler(404)
