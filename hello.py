@@ -87,11 +87,32 @@ def update(id):
             return redirect( url_for('add_user') )
         except:
             flash("There is a problem!")
-            return render_template("update.html", form=form, name_to_update=name_to_update)
+            return render_template("update.html", form=form, name_to_update=name_to_update, id=id)
         
     if request.method == "GET":
-        return render_template("update.html", form=form, name_to_update=name_to_update)
+        return render_template("update.html", form=form, name_to_update=name_to_update, id=id)
 
+# DELETE
+@app.route('/delete/<int:id>')
+def delete(id):
+    user_to_delete = Users.query.get_or_404(id)
+    name = None
+    form = UserForm()
+
+    try:
+        db.session.delete(user_to_delete)
+        db.session.commit()
+        flash("User Deleted successfully")
+
+        our_users = Users.query.order_by(Users.date_added)
+        return redirect(url_for("add_user"))
+
+    except:
+        flash("Not successfully deleted")
+        return render_template("add_user.html",
+                name = name,
+                form = form,
+                our_users=our_users)
 
 
 @app.route('/name', methods=['GET', 'POST'])

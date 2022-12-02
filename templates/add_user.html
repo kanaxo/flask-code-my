@@ -20,6 +20,7 @@
 {% endfor %}
 <a href="{{ url_for( 'add_user' ) }}" class="btn btn-primary">Back</a>
 {% else %}
+<h1>Add user</h1>
 <div class="shadow-lg p-3 mb-5 bg-body rounded">
   <form method="POST">
     {{form.hidden_tag()}}
@@ -39,16 +40,23 @@
       <th scope="col">#</th>
       <th scope="col">Name</th>
       <th scope="col">Email</th>
+      <th scope="col">Actions</th>
     </tr>
   </thead>
   <tbody>
     {% for our_user in our_users %}
     <tr>
-      <td>
-        <a href="{{ url_for('update', id=our_user.id)}}">{{our_user.id}}</a>
-      </td>
+      <td>{{our_user.id}}</td>
       <td>{{our_user.name}}</td>
       <td>{{our_user.email}}</td>
+      <td>
+        <a class="btn btn-danger" href="{{ url_for('delete', id=our_user.id)}}"
+          >Delete</a
+        >
+        <a class="btn btn-primary" href="{{ url_for('update', id=our_user.id)}}"
+          >Edit</a
+        >
+      </td>
     </tr>
     {% endfor %}
   </tbody>
