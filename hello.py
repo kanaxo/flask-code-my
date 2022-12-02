@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash
+from flask import Flask, render_template, flash, request, redirect, url_for
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
@@ -50,6 +50,7 @@ def hello():
 def user(name):
     return render_template("user.html", user_name=name)
 
+# ADD
 @app.route('/user/add', methods=['GET','POST'])
 def add_user():
     name = None
@@ -70,6 +71,28 @@ def add_user():
         name = name,
         form = form,
         our_users=our_users)
+
+# UPDATE
+@app.route('/update/<int:id>', methods=['GET','POST'])
+def update(id):
+    form = UserForm()
+    name_to_update = Users.query.get_or_404(id)
+    if request.method == "POST":
+        name_to_update.name = request.form['name']
+        name_to_update.email = request.form['email']
+        try:
+            db.session.commit()
+            flash("User updated Successfully!")
+            # return render_template("update.html", form=form, name_to_update=name_to_update)
+            return redirect( url_for('add_user') )
+        except:
+            flash("There is a problem!")
+            return render_template("update.html", form=form, name_to_update=name_to_update)
+        
+    if request.method == "GET":
+        return render_template("update.html", form=form, name_to_update=name_to_update)
+
+
 
 @app.route('/name', methods=['GET', 'POST'])
 def name():
